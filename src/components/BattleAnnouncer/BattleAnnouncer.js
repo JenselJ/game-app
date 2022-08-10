@@ -1,6 +1,9 @@
-import './battleAnnouncer.css';
+import './BattleAnnouncer.css';
+import { useTypedMessage } from 'hooks/useTypedMessage';
 
-export function battleAnnouncer() {
+export function BattleAnnouncer({ message }) {
+
+  const typedMessage = useTypedMessage(message)
 
   return (
     <div className='battle-announcer-main'>

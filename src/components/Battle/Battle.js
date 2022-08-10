@@ -3,11 +3,13 @@ import { PlayerSummary } from 'components/PlayerSummary/PlayerSummary'
 import { opponentStats, playerStats } from 'shared/characters';
 import { useState } from 'react';
 import { BattleMenu } from 'components/BattleMenu/BattleMenu';
+import { BattleAnnouncer } from 'components/BattleAnnouncer/BattleAnnouncer';
 
 export function Battle() {
 
   const [playerHealth, setPlayerHealth] = useState(playerStats.maxHealth);
   const [opponentHealth, setOpponentHealth] = useState(opponentStats.maxHealth);
+  const [announcerMessage, setAnnouncerMessage] = useState('')
 
 
   return (
@@ -61,6 +63,16 @@ export function Battle() {
         </div>
 
         <div className='hud'>
+
+          <div className='hudChild'>
+            <BattleAnnouncer
+              message={
+                announcerMessage || `What will ${playerStats.name} do?`
+              }
+            />
+          </div>
+
+
           <div className='hudChild'>
             <BattleMenu
               onAttack={() => console.log('Attack!')}
