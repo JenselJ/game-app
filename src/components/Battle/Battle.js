@@ -7,10 +7,6 @@ import { BattleAnnouncer } from 'components/BattleAnnouncer/BattleAnnouncer';
 
 export function Battle() {
 
-  const [playerHealth, setPlayerHealth] = useState(playerStats.maxHealth);
-  const [opponentHealth, setOpponentHealth] = useState(opponentStats.maxHealth);
-  const [announcerMessage, setAnnouncerMessage] = useState('')
-
 
   return (
     <>
