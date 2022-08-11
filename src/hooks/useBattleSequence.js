@@ -1,8 +1,9 @@
 import { wait } from "@testing-library/user-event/dist/utils"
+import { magic, heal, attack } from 'shared/helpers'
 import { useEffect, useState } from "react"
 import { opponentStats, playerStats } from "shared/characters"
 
-export const useBattleSequence = () => {
+export const useBattleSequence = (sequence) => {
 
   const [turn, setTurn] = useState(0)
   const [inSequence, setInSequence] = useState(false)
@@ -18,10 +19,10 @@ export const useBattleSequence = () => {
     if (mode) {
 
       const attacker = turn === 0 ? playerStats : opponentStats;
-      const opponent = turn === 0 ? opponentStats : playerStats;
+      const receiver = turn === 0 ? opponentStats : playerStats;
 
       switch (mode) {
-        case 'attack':
+        case 'attack': {
           const damage = attack({ attacker, receiver });
 
           (async () => {
@@ -38,13 +39,82 @@ export const useBattleSequence = () => {
 
             await wait(500);
 
+            turn === 0 ? setOpponentAnimation('damage') : setPlayerAnimation('damage')
+
+            await wait(750);
+
+            turn === 0 ? setOpponentAnimation('static') : setPlayerAnimation('static')
+
+            setAnnouncerMessage(`${receiver.name} felt that!`)
+
+            turn === 0 ? setOpponentHealth(h => (h - damage > 0 ? h - damage : 0)) : setPlayerHealth(h => (h - damage > 0 ? h - damage : 0))
+
+            await wait(2000);
+
+            setAnnouncerMessage(`Now it's ${receiver.name}'s turn!`)
+
+            await wait(1500);
+
+            setTurn(turn === 0 ? 1 : 0)
+            setInSequence(false);
+
           })();
 
           break;
+        }
 
-        default:
+        case 'magic': {
+          const damage = magic({ attacker, receiver });
+
+          (async () => {
+            setInSequence(true)
+            setAnnouncerMessage(`${attacker.name} has cast a spell!`)
+
+            await wait(1000)
+
+            turn === 0 ? setPlayerAnimation('magic') : setOpponentAnimation('magic')
+
+            await wait(100);
+
+            turn === 0 ? setPlayerAnimation('static') : setOpponentAnimation('static')
+
+            await wait(500);
+
+            turn === 0 ? setOpponentAnimation('damage') : setPlayerAnimation('damage')
+
+            await wait(750);
+
+            turn === 0 ? setOpponentAnimation('static') : setPlayerAnimation('static')
+
+            setAnnouncerMessage(`${receiver.name} doesn't know what hit them!`)
+
+            turn === 0 ? setOpponentHealth(h => (h - damage > 0 ? h - damage : 0)) : setPlayerHealth(h => (h - damage > 0 ? h - damage : 0))
+
+            await wait(2000);
+
+            setAnnouncerMessage(`Now it's ${receiver.name}'s turn!`)
+
+            await wait(1500);
+
+            setTurn(turn === 0 ? 1 : 0)
+            setInSequence(false);
+
+          })();
+
           break;
+        }
+
+        case 'heal': {
+
+        }
+
+        default: {
+          break;
+        }
+
       }
+
+
     }
 
   }, [sequence])

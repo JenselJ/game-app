@@ -1,12 +1,35 @@
 import './styles.modules.css';
 import { PlayerSummary } from 'components/PlayerSummary/PlayerSummary'
 import { opponentStats, playerStats } from 'shared/characters';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { BattleMenu } from 'components/BattleMenu/BattleMenu';
 import { BattleAnnouncer } from 'components/BattleAnnouncer/BattleAnnouncer';
+import { useBattleSequence } from 'hooks/useBattleSequence';
+import { useAIOpponent } from 'hooks/useAiOpponent';
 
 export function Battle() {
 
+
+  const [sequence, setSequence] = useState({})
+
+  const {
+    turn,
+    inSequence,
+    playerHealth,
+    opponentHealth,
+    announcerMessage,
+    playerAnimation,
+    opponentAnimation
+  } = useBattleSequence(sequence);
+
+  const aiChoice = useAIOpponent(turn);
+
+  useEffect(() => {
+    if (aiChoice && turn === 1 && !inSequence) {
+      setSequence({ turn, mode: aiChoice })
+    }
+
+  }, [turn, aiChoice, inSequence])
 
   return (
     <>
@@ -31,7 +54,7 @@ export function Battle() {
             <img
               alt={playerStats.name}
               src={playerStats.img}
-            // className=''
+              className={playerAnimation}
             />
 
           </div>
@@ -40,7 +63,7 @@ export function Battle() {
             <img
               alt={opponentStats.name}
               src={opponentStats.img}
-            // className=''
+              className={opponentAnimation}
             />
           </div>
         </div>
@@ -71,9 +94,9 @@ export function Battle() {
 
           <div className='hudChild'>
             <BattleMenu
-              onAttack={() => console.log('Attack!')}
-              onMagic={() => console.log('Magic!')}
-              onHeal={() => console.log('Heal!')}
+              onAttack={() => setSequence({ turn, mode: 'attack' })}
+              onMagic={() => setSequence({ turn, mode: 'magic' })}
+              onHeal={() => setSequence({ turn, mode: 'heal' })}
             />
           </div>
         </div>
