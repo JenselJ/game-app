@@ -105,7 +105,32 @@ export const useBattleSequence = (sequence) => {
         }
 
         case 'heal': {
+          const recovered = heal({ receiver: attacker });
 
+          (async () => {
+            setInSequence(true);
+            setAnnouncerMessage(`${attacker.name} has chosen to heal!`)
+            await wait(1000);
+
+            turn === 0 ? setPlayerAnimation('magic') : setOpponentAnimation('magic');
+            await wait(1000);
+
+            turn === 0 ? setPlayerAnimation('static') : setOpponentAnimation('static');
+            await wait(500);
+
+            setAnnouncerMessage(`${attacker.name} has recovered health.`)
+            turn === 0 ? setPlayerHealth(h => h + recovered <= attacker.maxHealth ? h + recovered : attacker.maxHealth) : setOpponentHealth(h => h + recovered <= attacker.maxHealth ? h + recovered : attacker.maxHealth)
+            await wait(2500)
+
+            setAnnouncerMessage(`Now it's ${receiver.name}'s turn!`)
+            await wait(1500);
+
+            setTurn(turn == 0 ? 1 : 0);
+            setInSequence(false)
+
+          })()
+
+          break;
         }
 
         default: {

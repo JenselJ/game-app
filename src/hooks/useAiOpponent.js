@@ -10,4 +10,5 @@ export const useAIOpponent = turn => {
     }
   }, [turn])
 
+  return aiChoice
 }
