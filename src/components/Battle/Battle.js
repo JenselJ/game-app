@@ -108,6 +108,7 @@ export function Battle({ onGameEnd }) {
               onAttack={() => setSequence({ turn, mode: 'attack' })}
               onMagic={() => setSequence({ turn, mode: 'magic' })}
               onHeal={() => setSequence({ turn, mode: 'heal' })}
+              sequence={sequence}
             />
           </div>
         </div>

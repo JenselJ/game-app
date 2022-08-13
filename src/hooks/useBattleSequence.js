@@ -28,7 +28,6 @@ export const useBattleSequence = (sequence) => {
           (async () => {
             setInSequence(true)
             setAnnouncerMessage(`${attacker.name} has chosen to attack!`)
-
             await wait(1000)
 
             turn === 0 ? setPlayerAnimation('attack') : setOpponentAnimation('attack')

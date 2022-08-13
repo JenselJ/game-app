@@ -1,15 +1,22 @@
 import './battleMenu.css'
+import { useBattleSequence } from 'hooks/useBattleSequence';
 
-export function BattleMenu({ onAttack, onMagic, onHeal }) {
+
+export function BattleMenu({ onAttack, onMagic, onHeal, sequence }) {
+
+  const {
+    inSequence
+  } = useBattleSequence(sequence)
+
   return (
     <div className='battle-menu-main'>
-      <div onClick={onAttack} className='option'>
+      <div onClick={!inSequence ? onAttack : console.log('wait for your turn!')} className='option'>
         Attack
       </div>
-      <div onClick={onMagic} className='option'>
+      <div onClick={!inSequence ? onMagic : console.log('wait for your turn!')} className='option'>
         Magic
       </div>
-      <div onClick={onHeal} className='option'>
+      <div onClick={!inSequence ? onHeal : console.log('wait for your turn!')} className='option'>
         Heal
       </div>
     </div>
